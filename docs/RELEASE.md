@@ -7,8 +7,16 @@
 
 ## Tag 规则
 
-crun 上游 tag 不带 `v`（`1.29.1`），本仓库统一带 `v`（`v1.29.1`）。
-`vX.Y.Z` 是一个 manifest list，同时含 `linux/amd64` 与 `linux/arm64`。
+crun 上游 tag 不带 `v`，本仓库统一带 `v`，其余部分和上游 1:1，不做补零。
+
+上游的版本号有两种形态，都要支持：
+
+| 上游 | 本仓库 | 说明 |
+| --- | --- | --- |
+| `1.28` | `v1.28` | 相当于 `.0`，只有两段 |
+| `1.29.1` | `v1.29.1` | patch 版本，三段 |
+
+`vX.Y` / `vX.Y.Z` 都是一个 manifest list，同时含 `linux/amd64` 与 `linux/arm64`。
 
 ```bash
 docker pull ghcr.io/cpaas-dev/kluster-vendor-crun:v1.29.1
@@ -21,14 +29,15 @@ docker buildx imagetools inspect ghcr.io/cpaas-dev/kluster-vendor-crun:v1.29.1
 扫描 <https://github.com/containers/crun> 的 Release：
 
 - 取上游最近 5 个正式 release（由 `TRACKED_RELEASES` 控制），按发布时间倒序，不按 minor 分组
-- 排除 `draft` / `prerelease`，并要求 tag 严格匹配 `X.Y.Z`，所以 `rc` / `alpha` / `beta` 不会被构建
+- 排除 `draft` / `prerelease`，并要求 tag 严格匹配 `X.Y` 或 `X.Y.Z`，
+  所以 `rc` / `alpha` / `beta`、以及 `0.12.2.1` 这种四段的老 tag 不会被构建
 - 匹配后补上 `v` 前缀，再和本仓库已有的 Release 比对
 - 这 5 个里本仓库还没发过的，才进构建矩阵
 
 ## 手动补发
 
 `.github/workflows/release.yml` 可以 `workflow_dispatch`，`versions` 填逗号分隔的版本
-列表（带 `v`）。已经有 Release 的版本会被跳过，不会覆盖。
+列表（带 `v`，如 `v1.29.1,v1.28`）。已经有 Release 的版本会被跳过，不会覆盖。
 
 ## 调试
 
@@ -41,5 +50,5 @@ GH_REPO=cpaas-dev/kluster-vendor-crun \
 
 # 解析版本矩阵
 GH_REPO=cpaas-dev/kluster-vendor-crun \
-  VERSIONS=v1.29.1,v1.28.0 .github/scripts/resolve_versions.bash
+  VERSIONS=v1.29.1,v1.28 .github/scripts/resolve_versions.bash
 ```

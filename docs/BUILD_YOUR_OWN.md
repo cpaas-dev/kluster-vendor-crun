@@ -15,6 +15,10 @@ docker buildx build \
   -t ...
 ```
 
+crun 的版本号有 `vX.Y`（如 `v1.28`，相当于别家的 `.0`）和 `vX.Y.Z`（如 `v1.29.1`）
+两种形态，都能直接填。注意不要给两段的版本补零——上游的发布件叫
+`crun-1.28-linux-amd64`，写成 `v1.28.0` 拼出来的地址会 404。
+
 ## 下载加速
 
 ```bash
@@ -59,8 +63,7 @@ BASE_IMAGE=docker.io/rockylinux/rockylinux:10.2.20260525.0
 # 最终镜像只装 TARGETARCH，这里改小只能省下载量，改小于目标架构集合会构建失败。
 # 上游还发 ppc64le / riscv64 / s390x，ELF 检查也认这几个
 VENDOR_ARCHES="amd64 arm64"
-
-# 二进制变体。留空取默认（链接 systemd），
-# 填 -disable-systemd 取不带 systemd 的那个
-CRUN_FLAVOR=""
 ```
+
+上游每个架构还发一个 `-disable-systemd` 变体，本仓库固定取默认的那个
+（链接 systemd，Kubernetes 的 systemd cgroup driver 需要它），没有开关。

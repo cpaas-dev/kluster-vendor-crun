@@ -8,9 +8,10 @@
 # 用法：resolve_versions.bash
 #
 # 环境变量：
-#   VERSIONS       必填，逗号分隔的版本列表，如 "v1.29.1,v1.28.0"
+#   VERSIONS       必填，逗号分隔的版本列表，如 "v1.29.1,v1.28"
 #                  本仓库的 tag 带 v 前缀，上游 crun 的 tag 不带，下载时在 Dockerfile 里剥掉
-#                  只接受正式版 vMAJOR.MINOR.PATCH，带 -rc/-alpha/-beta 一律拒绝
+#                  crun 版本号有 vX.Y（如 v1.28）和 vX.Y.Z（如 v1.29.1）两种形态；
+#                  带 -rc/-alpha/-beta 的一律拒绝
 #   GH_TOKEN       gh CLI 凭据
 #   GH_REPO        目标仓库，如 cpaas-dev/kluster-vendor-crun
 #
@@ -38,8 +39,8 @@ fi
 
 wanted=()
 for v in "${versions[@]}"; do
-    if [[ ! "${v}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-        fail "invalid or pre-release version: ${v} (expected vMAJOR.MINOR.PATCH)"
+    if [[ ! "${v}" =~ ^v[0-9]+\.[0-9]+(\.[0-9]+)?$ ]]; then
+        fail "invalid or pre-release version: ${v} (expected vMAJOR.MINOR[.PATCH])"
     fi
 
     if gh release view "${v}" --json tagName >/dev/null 2>&1; then

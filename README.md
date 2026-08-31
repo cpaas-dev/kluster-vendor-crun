@@ -36,8 +36,8 @@ sha256sum -c crun.sha256sum
 
 说明：
 
-- 上游 tag 不带 `v` 前缀（`1.29.1`），本仓库的镜像 tag 和 Release 统一带 `v`
-  （`v1.29.1`），下载时在 Dockerfile 里剥掉
+- 上游 tag 不带 `v` 前缀，本仓库的镜像 tag 和 Release 统一带 `v`，其余和上游 1:1：
+  `1.29.1` → `v1.29.1`，`1.28` → `v1.28`
 - 二进制取自上游 `crun-<ver>-linux-<arch>`，原样落盘后改名成 `crun`
 - 上游不提供 `.sha256sum`，只有 GPG detached 签名。所以 `crun.sha256sum` 是本仓库
   下载后自己算的，只能保证「镜像里的这个文件没被改过」，不等同于上游校验和

@@ -35,9 +35,10 @@ gh api \
     --jq '.[] | select(.draft == false and .prerelease == false) | .tag_name' \
     > "${workdir}/upstream.txt"
 
-# 只要 X.Y.Z，rc / alpha / beta 这类即使没打 prerelease 标记也挡在外面。
+# crun 的版本号有两种形态：X.Y（如 1.28，相当于别家的 .0）和 X.Y.Z（如 1.29.1，patch）。
+# 只支持这两种，rc / alpha / beta 以及 0.12.2.1 这种四段的老 tag 都拒绝。
 # 同时补上 v 前缀，对齐本仓库的 Release tag
-grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' "${workdir}/upstream.txt" \
+grep -E '^[0-9]+\.[0-9]+(\.[0-9]+)?$' "${workdir}/upstream.txt" \
     | sed 's/^/v/' > "${workdir}/stable.txt" || true
 if [[ ! -s "${workdir}/stable.txt" ]]; then
     fail "no stable upstream releases found, ${UPSTREAM_REPO} API response looks wrong"
