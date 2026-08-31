@@ -1,0 +1,31 @@
+{
+    "cSpell.words": [
+        "binfmt",
+        "buildx",
+        "crun",
+        "daocloud",
+        "esac",
+        "ghcup",
+        "GNUPGHOME",
+        "gpgv",
+        "hkps",
+        "hostedtoolcache",
+        "imagetools",
+        "KEYSERVER",
+        "kluster",
+        "mapfile",
+        "mktemp",
+        "openpgp",
+        "oras",
+        "overriden",
+        "pipefail",
+        "riscv",
+        "rockylinux",
+        "runc",
+        "setopt",
+        "TARGETARCH",
+        "TARGETPLATFORM",
+        "tonistiigi",
+        "userland"
+    ]
+}
